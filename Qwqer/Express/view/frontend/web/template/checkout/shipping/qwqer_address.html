@@ -1,0 +1,28 @@
+<div id="qwqer-delivery"
+     class="qwqer-shipping-information"
+     data-bind="visible: selectedMethod() == 'qwqer'">
+    <div class="qwqer-shipping-info">
+        <div class="shipping-information-content fieldset">
+            <div class="field">
+                <label class="label">
+                    <span data-bind="i18n: 'QWQER Express Address'"></span>
+                </label>
+                <input class="input-text" type="text" data-bind="
+                    afterRender: initAutocomplete,
+                    autocomplete: { selected: selectedAddress, options: citiesList(), minLength: 2 },
+                    value: value,
+                    valueUpdate: 'keyup',
+                    hasFocus: focused,
+                    attr: {
+                        name: 'carrier_address',
+                        placeholder: $t('QWQER Express Address'),
+                        'aria-describedby': noticeId,
+                        id: 'carrier_address'
+                    }" />
+                <div class="error_message_city field-error" data-bind="visible: errorMessageAddress">
+                    <div data-bind="text: errorMessageAddress"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

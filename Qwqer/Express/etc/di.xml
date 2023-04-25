@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Qwqer\Express\Api\ShipmentEstimationInterface" type="Qwqer\Express\Model\ShippingMethodManagement" />
+    <!-- logger -->
+    <type name="Qwqer\Express\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Qwqer\Express\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">QwqerCoreLogger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Qwqer\Express\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="Qwqer_Express_Shipping_Information_Management"
+                type="Qwqer\Express\Plugin\Quote\AddressPlugin" sortOrder="1" disabled="false"/>
+    </type>
+</config>

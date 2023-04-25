@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/guest-carts/:cartId/qwqer-estimate-shipping-methods" method="POST">
+        <service class="Qwqer\Express\Api\ShipmentEstimationInterface" method="estimateByExtendedAddress"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+    <route url="/V1/carts/mine/qwqer-estimate-shipping-methods" method="POST">
+        <service class="Qwqer\Express\Api\ShipmentEstimationInterface" method="estimateByExtendedAddress"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+</routes>

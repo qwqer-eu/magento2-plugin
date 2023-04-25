@@ -1,0 +1,61 @@
+<?php
+/* @var $block \Qwqer\Express\Model\Config\StoreAddress */
+$configPrefix = $block->getConfigPrefix();
+$methodCode = $block->getMethodCode();
+?>
+<script>
+    require([
+        'jquery',
+        'jquery/ui',
+    ], function ($) {
+
+        const addressField = $('#carriers_<?= $configPrefix?>');
+        addressField.autocomplete({
+            minLength: 3,
+            maxRows: 30,
+            source: function (term, response) {
+                new Ajax.Request('<?php echo $block->getAjaxUrl() ?>', {
+                    parameters: {address: term.term},
+                    method: 'GET',
+                    loaderArea: true,
+                    asynchronous: true,
+                    contentType: "application/json",
+                    onSuccess: function (resp) {
+                        response(resp.responseJSON);
+                    }
+                });
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                addressField.val(ui.item.label);
+                new Ajax.Request('<?php echo $block->getAjaxUrl() ?>', {
+                    parameters: {location: ui.item.label},
+                    method: 'GET',
+                    loaderArea: true,
+                    asynchronous: true,
+                    onSuccess: function (resp) {
+                        $("#carriers_<?= $methodCode ?>_geo_store").val(resp.responseJSON).attr('disabled', false);
+                        $('#carriers_<?= $methodCode ?>_geo_store_inherit').attr('checked', false)
+                    }
+                });
+            },
+            focus: function (event, ui) {
+                event.preventDefault();
+                addressField.val(ui.item.label);
+            },
+            change: function( event, ui ) {
+                if (!ui.item) {
+                    addressField.val('');
+                    $("#carriers_<?= $methodCode ?>_geo_store").val('');
+                }
+            }
+        });
+    });
+</script>
+<input id="carriers_<?= $configPrefix?>"
+       name="groups[<?= $methodCode ?>][fields][store_address][value]"
+       data-ui-id="text-groups-<?= $methodCode ?>-fields-store-address-value"
+       value="<?php echo $block->getConfigValue(); ?>" class="
+       input-text admin__control-text" type="text"
+>
+

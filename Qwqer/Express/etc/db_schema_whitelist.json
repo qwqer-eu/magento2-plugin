@@ -1,0 +1,12 @@
+{
+    "quote_address": {
+        "column": {
+            "qwqer_address": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "qwqer_data": true
+        }
+    }
+}
