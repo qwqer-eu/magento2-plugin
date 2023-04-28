@@ -48,17 +48,16 @@ class ShippingCost extends AbstractRequest
      */
     protected function getBodyParams(array $params = []): array
     {
-        $originData = [
-            'address' => $params['address'],
-            'coordinates' => $params['coordinates'],
-        ];
+        $storeOwnerAddress = $params;
+        $storeOwnerAddress["address"] = $this->configurationProvider->getStoreAddress();
+        $storeOwnerAddress["coordinates"] = $this->configurationProvider->getStoreAddressLocation();
 
         $bodyArray =  [
             'type' => ConfigurationProvider::DELIVERY_ORDER_TYPES,
             'real_type' => ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE,
             'category' => $this->configurationProvider->getCategory(),
-            'origin' => $originData,
-            'destinations' => [$originData],
+            'origin' => $storeOwnerAddress,
+            'destinations' => [$params],
         ];
 
         return array_merge(
