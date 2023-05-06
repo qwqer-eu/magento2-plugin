@@ -3,7 +3,7 @@
 
 ##### For Magento / Adobe Commerce 2.4.x
 
-### How to Install Magento SMTP Extension
+### How to Install Magento QWQER Express Delivery Extension
 
 ##### Install the extension using a zipped file
 
