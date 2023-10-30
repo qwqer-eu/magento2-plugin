@@ -33,6 +33,10 @@
                                                                     <item name="component" xsi:type="string">Qwqer_Express/js/view/checkout/shipping/qwqer_address</item>
                                                                     <item name="template" xsi:type="string">Qwqer_Express/checkout/shipping/qwqer_address</item>
                                                                 </item>
+                                                                <item name="vendor_carrier_form2" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Qwqer_Express/js/view/checkout/shipping/qwqer_address_parcel</item>
+                                                                    <item name="template" xsi:type="string">Qwqer_Express/checkout/shipping/qwqer_address_parcel</item>
+                                                                </item>
                                                             </item>
                                                         </item>
                                                     </item>

@@ -3,7 +3,10 @@
 namespace Qwqer\Express\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Qwqer\Express\Model\Carrier\Express;
 use Qwqer\Express\Provider\ConfigurationProvider;
+use Qwqer\Express\Model\Carrier\ScheduledToDoor;
+use Qwqer\Express\Model\Carrier\ScheduledToParcel;
 
 class CompositeConfigProvider implements ConfigProviderInterface
 {
@@ -48,8 +51,13 @@ class CompositeConfigProvider implements ConfigProviderInterface
         $config = [];
         $quote = $this->_checkoutSession->getQuote();
 
-        $config['qwqer']['enabled'] = (int) $this->configurationProvider->getIsQwqerEnabled();
-        $config['qwqer']['methodCode'] = \Qwqer\Express\Model\Carrier\Express::CARRIER_CODE;
+        $config[Express::CARRIER_CODE]['enabled'] = (int) $this->configurationProvider->getIsQwqerEnabled();
+        $config[Express::CARRIER_CODE]['methodCode'] = Express::CARRIER_CODE;
+        $config[ScheduledToDoor::CARRIER_CODE]['enabled'] = (int) $this->configurationProvider->getIsQwqerDoorEnabled();
+        $config[ScheduledToDoor::CARRIER_CODE]['methodCode'] = ScheduledToDoor::CARRIER_CODE;
+        $config[ScheduledToParcel::CARRIER_CODE]['enabled'] = (int) $this->configurationProvider->getIsQwqerParcelEnabled();
+        $config[ScheduledToParcel::CARRIER_CODE]['methodCode'] = ScheduledToParcel::CARRIER_CODE;
+
         if ($quote) {
             if (!empty($quote->getShippingAddress()->getQwqerAddress())) {
                 $config['extension_attributes']['qwqer_address'] = $quote->getShippingAddress()->getQwqerAddress();

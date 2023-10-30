@@ -34,7 +34,10 @@ class AddressPlugin
         $cartId,
         \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
     ) {
-        if ($this->configurationProvider->getIsQwqerEnabled()) {
+        if ($this->configurationProvider->getIsQwqerEnabled()
+            || $this->configurationProvider->getIsQwqerDoorEnabled()
+            || $this->configurationProvider->getIsQwqerParcelEnabled()
+        ) {
             $shippingAddress = $addressInformation->getShippingAddress();
             $ext = $shippingAddress->getExtensionAttributes();
             $shippingAddress->setQwqerAddress($ext->getQwqerAddress());

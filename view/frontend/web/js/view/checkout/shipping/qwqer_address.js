@@ -22,10 +22,11 @@ define([
         selectedMethod: ko.observable(''),
         errorMessageAddress: ko.observable(''),
         citiesList: ko.observableArray([]),
-        selectedAddress: ko.observable(''),
+        selectedQwqerAddress: ko.observable(''),
         cityInput: '',
         isSelected: ko.observable(false),
         carrierCodeConfig: window.checkoutConfig.qwqer.methodCode,
+        carrierCodeConfigDoor: window.checkoutConfig.qwqer_door.methodCode,
         /**
          * @param $element
          */
@@ -33,14 +34,20 @@ define([
             this._super();
             let self = this;
 
-            if(window.checkoutConfig.qwqer && window.checkoutConfig.qwqer.enabled == 0) {
+            if(
+                (window.checkoutConfig.qwqer && window.checkoutConfig.qwqer.enabled == 0) &&
+                (window.checkoutConfig.qwqer_door && window.checkoutConfig.qwqer_door.enabled == 0)
+            ) {
                 return true;
             }
 
             quote.shippingMethod.subscribe(function (value) {
-                if(value && value.method_code == self.carrierCodeConfig) {
-                    //console.log('quote.shippingMethod.subscribe', self.selectedAddress());
+                console.log('quote.shippingMethod.subscribe', value.method_code, self.selectedQwqerAddress());
+                if(value && (value.method_code == self.carrierCodeConfig || value.method_code == self.carrierCodeConfigDoor)) {
                     self.selectedMethod(value.method_code);
+                    if (self.selectedQwqerAddress()) {
+                        self.updateShippingAddressData(self.selectedQwqerAddress());
+                    }
                 } else {
                     self.selectedMethod('');
                 }
@@ -49,29 +56,35 @@ define([
             });
 
             quote.shippingAddress.subscribe(function (address) {
-                //console.log('quote.shippingAddress.subscribe', self.selectedAddress(), address.extension_attributes);
-                if ( self.selectedAddress()
+                console.log('quote.shippingAddress.subscribe', self.selectedQwqerAddress());
+                if ( self.selectedQwqerAddress()
                     && quote.shippingMethod()
-                    && quote.shippingMethod()['carrier_code'] == window.checkoutConfig.qwqer.methodCode
+                    && (quote.shippingMethod()['carrier_code'] == window.checkoutConfig.qwqer.methodCode || quote.shippingMethod()['carrier_code'] == window.checkoutConfig.qwqer_door.methodCode)
                     && (typeof address.extension_attributes === "undefined" || typeof address.extension_attributes.qwqer_address === "undefined")
                 ){
-                    self.updateShippingAddressData(self.selectedAddress());
+                    self.updateShippingAddressData(self.selectedQwqerAddress());
                 }
             });
 
             self.value.subscribe(function (value) {
-                if(self.value() == '' && self.selectedMethod() == self.carrierCodeConfig) {
+                if(self.value() == '' && (self.selectedMethod() == self.carrierCodeConfig || self.selectedMethod() == self.carrierCodeConfigDoor)) {
                     self.errorMessageAddress($.mage.__("Field is required"));
                 } else {
                     self.errorMessageAddress('');
                 }
             })
 
-            self.selectedAddress.subscribe(function (newValue) {
-                if(self.selectedMethod() != self.carrierCodeConfig) {
+            self.selectedQwqerAddress.subscribe(function (newValue) {
+                let qwqerSelected = false;
+                console.log('self.selectedQwqerAddress.subscribe method', self.selectedMethod());
+                if(self.selectedMethod() == self.carrierCodeConfig
+                    || self.selectedMethod() == self.carrierCodeConfigDoor) {
+                    qwqerSelected = true;
+                }
+                if (!qwqerSelected) {
                     return true;
                 }
-                //console.log('self.selectedAddress.subscribe');
+                console.log('self.selectedQwqerAddress.subscribe', newValue);
                 let updateFlag = true;
                 if(!customer.isLoggedIn()) {
                     let loginFormSelector = 'form[data-role=email-with-possible-login]';
@@ -114,7 +127,7 @@ define([
                             rateRegistry.set(shippingAddress.getCacheKey(), null);
                             quote.shippingAddress(shippingAddress);
                             if(response.length && response[0] == 0) {
-                                self.selectedAddress('');
+                                self.selectedQwqerAddress('');
                                 $(self.cityInput).val('');
                                 newValue = '';
                                 self.errorMessageAddress($.mage.__("QWQER Delivery option not available"));
@@ -131,8 +144,8 @@ define([
          */
         updateShippingAddressData: function(value) {
             let self = this;
+            console.log(quote.shippingMethod(), self.selectedMethod);
             if (quote && quote.shippingAddress() && quote.shippingMethod()) {
-
                 let shippingAddress = quote.shippingAddress();
 
                 if (shippingAddress['extension_attributes'] === undefined) {
@@ -177,15 +190,16 @@ define([
                         });
                     }
                     if (!valid) {
-                        self.selectedAddress('');
+                        self.selectedQwqerAddress('');
                         $(self.cityInput).val('');
-                        self.errorMessageAddress($.mage.__("Please add correct QWQER Express Address"));
+                        self.errorMessageAddress($.mage.__("Please add correct QWQER Address"));
                     }
                 },
                 select: function (event, ui) {
                     event.preventDefault();
+                    //console.log('select', ui.item.label);
                     $(self.cityInput).val(ui.item.label);
-                    self.selectedAddress(ui.item.label);
+                    self.selectedQwqerAddress(ui.item.label);
                     self.isSelected(true);
                 },
                 focus: function (event, ui) {
@@ -193,11 +207,12 @@ define([
                     $(self.cityInput).val(ui.item.label);
                 },
                 close: function (event, ui) {
-                    if(self.selectedAddress() && !self.isSelected()){
+                    //console.log('close', self.selectedQwqerAddress());
+                    if(self.selectedQwqerAddress() && !self.isSelected()){
                         self.isSelected(true);
                     }
                     if (!self.isSelected()) {
-                        self.selectedAddress('');
+                        self.selectedQwqerAddress('');
                         $(self.cityInput).val('');
                         self.errorMessageAddress($.mage.__("Field is required"));
                     }

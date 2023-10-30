@@ -1,26 +1,26 @@
-<div id="qwqer-delivery"
+<div id="qwqer-delivery-parcel"
      class="qwqer-shipping-information"
-     data-bind="visible: selectedMethod() == 'qwqer' || selectedMethod() == 'qwqer_door'">
+     data-bind="visible: selectedMethod() == 'qwqer_parcel'">
     <div class="qwqer-shipping-info">
         <div class="shipping-information-content fieldset">
             <div class="field">
                 <label class="label">
-                    <span data-bind="i18n: 'QWQER Address'"></span>
+                    <span data-bind="i18n: 'QWQER Parcel Machines'"></span>
                 </label>
                 <input class="input-text" type="text" data-bind="
                     afterRender: initAutocomplete,
-                    autocomplete: { selected: selectedQwqerAddress, options: citiesList(), minLength: 2 },
+                    autocomplete: { selected: selectedParcel, options: parcelsList()},
                     value: value,
                     valueUpdate: 'keyup',
                     hasFocus: focused,
                     attr: {
-                        name: 'carrier_address',
-                        placeholder: $t('QWQER Address'),
+                        name: 'carrier_address_parcel',
+                        placeholder: $t('QWQER Parcel Machines'),
                         'aria-describedby': noticeId,
-                        id: 'carrier_address'
+                        id: 'carrier_address_parcel'
                     }" />
-                <div class="error_message_qwqer field-error" data-bind="visible: errorMessageAddress">
-                    <div data-bind="text: errorMessageAddress"></div>
+                <div class="error_message_qwqer field-error" data-bind="visible: errorMessageParcel">
+                    <div data-bind="text: errorMessageParcel"></div>
                 </div>
             </div>
         </div>

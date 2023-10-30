@@ -5,6 +5,8 @@ namespace Qwqer\Express\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Qwqer\Express\Logger\Logger;
 use Qwqer\Express\Model\Carrier\Express;
+use Qwqer\Express\Model\Carrier\ScheduledToDoor;
+use Qwqer\Express\Model\Carrier\ScheduledToParcel;
 
 class ManageShippingDescription implements ObserverInterface
 {
@@ -38,7 +40,10 @@ class ManageShippingDescription implements ObserverInterface
         $description = $order->getShippingDescription();
 
         if ($shippingMethod
-            && $shippingMethod->getData('carrier_code') == Express::CARRIER_CODE
+            && ($shippingMethod->getData('carrier_code') == Express::CARRIER_CODE
+                || $shippingMethod->getData('carrier_code') == ScheduledToDoor::CARRIER_CODE
+                || $shippingMethod->getData('carrier_code') == ScheduledToParcel::CARRIER_CODE
+            )
             && $quote->getShippingAddress()->getQwqerAddress()
         ) {
             $description .= " (". $quote->getShippingAddress()->getQwqerAddress() . " )";

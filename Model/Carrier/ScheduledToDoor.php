@@ -16,9 +16,9 @@ use Qwqer\Express\Model\Api\GeoCode;
 use Qwqer\Express\Model\Api\ShippingCost;
 use Qwqer\Express\Provider\ConfigurationProvider;
 
-class Express extends AbstractCarrier implements CarrierInterface
+class ScheduledToDoor extends AbstractCarrier implements CarrierInterface
 {
-    public const CARRIER_CODE = 'qwqer';
+    public const CARRIER_CODE = 'qwqer_door';
 
     public const METHOD_CODE = self::CARRIER_CODE."_".self::CARRIER_CODE;
 
@@ -147,7 +147,7 @@ class Express extends AbstractCarrier implements CarrierInterface
                 $coordinates = $this->geoCode->executeRequest($params);
                 if (!empty($coordinates)) {
                     $orderDataRequest = array_merge($params, $coordinates);
-                    $orderDataRequest['real_type'] = ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE;
+                    $orderDataRequest['real_type'] = ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE_DOOR;
                     $result = $this->shippingCost->executeRequest($orderDataRequest);
                     if (!empty($result['data']) && isset($result['data']['client_price'])) {
                         $price = $result['data']['client_price'] / 100;

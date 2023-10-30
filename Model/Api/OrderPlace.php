@@ -50,19 +50,26 @@ class OrderPlace extends AbstractRequest
     {
         $orderId = $params['incrementId'];
         unset($params['incrementId']);
-
+        $realType = $params['real_type'];
+        unset($params['real_type']);
         $storeOwnerAddress = $params;
         $storeOwnerAddress["address"] = $this->configurationProvider->getStoreAddress();
         $storeOwnerAddress["coordinates"] = $this->configurationProvider->getStoreAddressLocation();
 
         $bodyArray =  [
             'type' => ConfigurationProvider::DELIVERY_ORDER_TYPES,
-            'real_type' => ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE,
+            'real_type' => $realType,
             'category' => $this->configurationProvider->getCategory(),
             'delivery_order_id' => $orderId,
             'origin' => $storeOwnerAddress,
             'destinations' => [$params],
         ];
+
+        if ($realType == ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE_PARCEL
+            && $this->configurationProvider->getParcelSize())
+        {
+            $bodyArray['parcel_size'] = $this->configurationProvider->getParcelSize();
+        }
 
         return array_merge(
             [

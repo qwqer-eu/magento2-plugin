@@ -19,4 +19,11 @@
         <plugin name="Qwqer_Express_Shipping_Information_Management"
                 type="Qwqer\Express\Plugin\Quote\AddressPlugin" sortOrder="1" disabled="false"/>
     </type>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="qwqer_do_request" xsi:type="object">Qwqer\Express\Console\Commands</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

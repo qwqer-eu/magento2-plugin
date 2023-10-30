@@ -5,6 +5,7 @@ namespace Qwqer\Express\Controller\Api;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Qwqer\Express\Model\Api\AutocompleteAddress;
+use Qwqer\Express\Model\Api\ParcelMachines;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Data\Form\FormKey\Validator;
@@ -32,15 +33,21 @@ class Address extends Action
     protected AutocompleteAddress $autocompleteAddress;
 
     /**
-     * @var \Magento\Framework\Serialize\Serializer\Json
+     * @var Json
      */
-    protected \Magento\Framework\Serialize\Serializer\Json $json;
+    protected Json $json;
+
+    /**
+     * @var ParcelMachines
+     */
+    private ParcelMachines $parcelMachines;
 
     /**
      * @param Context $context
      * @param JsonFactory $resultJsonFactory
      * @param Validator $formKeyValidator
      * @param AutocompleteAddress $autocompleteAddress
+     * @param ParcelMachines $parcelMachines
      * @param Json $json
      */
     public function __construct(
@@ -48,11 +55,13 @@ class Address extends Action
         JsonFactory $resultJsonFactory,
         Validator $formKeyValidator,
         AutocompleteAddress $autocompleteAddress,
-        \Magento\Framework\Serialize\Serializer\Json $json
+        ParcelMachines $parcelMachines,
+        Json $json
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->formKeyValidator = $formKeyValidator;
         $this->autocompleteAddress = $autocompleteAddress;
+        $this->parcelMachines = $parcelMachines;
         $this->json = $json;
         parent::__construct($context);
     }
@@ -69,6 +78,9 @@ class Address extends Action
             if ($this->getRequest()->getParam('address')) {
                 $params = ['input' => $this->getRequest()->getParam('address')];
                 $result = $this->autocompleteAddress->executeRequest($params);
+            }
+            if ($this->getRequest()->getParam('parcels')) {
+                $result = $this->parcelMachines->getDataForDropdown();
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(

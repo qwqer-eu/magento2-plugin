@@ -10,6 +10,8 @@ use Magento\Quote\Model\QuoteIdMask;
 use Magento\Quote\Model\QuoteIdMaskFactory;
 use Qwqer\Express\Model\Api\GeoCode;
 use Qwqer\Express\Model\Api\ShippingCost;
+use Qwqer\Express\Model\Carrier\ScheduledToParcel;
+use Qwqer\Express\Model\Api\ParcelMachines;
 
 /**
  * Save QWQER address to customer attributes in quote
@@ -47,24 +49,32 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
     protected ShippingCost $shippingCost;
 
     /**
+     * @var ParcelMachines
+     */
+    private ParcelMachines $parcelMachines;
+
+    /**
      * @param CartRepositoryInterface $quoteRepository
      * @param Request $request
      * @param QuoteIdMaskFactory $quoteIdMaskFactory
      * @param GeoCode $geoCode
      * @param ShippingCost $shippingCost
+     * @param ParcelMachines $parcelMachines
      */
     public function __construct(
         CartRepositoryInterface $quoteRepository,
         Request $request,
         QuoteIdMaskFactory $quoteIdMaskFactory,
         GeoCode $geoCode,
-        ShippingCost $shippingCost
+        ShippingCost $shippingCost,
+        ParcelMachines $parcelMachines
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->request = $request;
         $this->quoteIdMaskFactory = $quoteIdMaskFactory;
         $this->geoCode = $geoCode;
         $this->shippingCost = $shippingCost;
+        $this->parcelMachines = $parcelMachines;
     }
 
     /**
@@ -92,7 +102,17 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
             try {
                 $addressString = $params['address']['data'];
                 $params = ['address' => $addressString];
-                $coordinates = $this->geoCode->executeRequest($params);
+                $coordinates = [];
+                $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
+                if ($shippingMethod == ScheduledToParcel::METHOD_CODE) {
+                    $response = $this->parcelMachines->getParcelDataByName($addressString);
+                    if (!empty($response['coordinates'])) {
+                        $coordinates['coordinates'] = $response['coordinates'];
+                    }
+                } else {
+                    $coordinates = $this->geoCode->executeRequest($params);
+                }
+                // todo continue with parameters
                 if (!empty($coordinates)) {
                     $orderDataRequest = array_merge($params, $coordinates);
                     $result = $this->shippingCost->executeRequest($orderDataRequest);

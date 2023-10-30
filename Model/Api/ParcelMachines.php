@@ -5,10 +5,12 @@ namespace Qwqer\Express\Model\Api;
 use Exception;
 use Qwqer\Express\Model\Api\AbstractRequest;
 
-class AutocompleteAddress extends AbstractRequest
+class ParcelMachines extends AbstractRequest
 {
+    public $parcels;
+
     /**
-     * AutocompleteAddress getResponse
+     * ParcelMachines getResponse
      *
      * @param array $params
      * @return array
@@ -20,7 +22,7 @@ class AutocompleteAddress extends AbstractRequest
             return $this->executeRequest->execute(
                 $this->getEndpointUri($params),
                 $this->getBodyParams($params),
-                "POST"
+                "GET"
             );
         } catch (\Exception $e) {
             $this->logger->critical($e->getMessage(), $e->getTrace());
@@ -46,15 +48,52 @@ class AutocompleteAddress extends AbstractRequest
             ) {
                 return $items;
             }
-            foreach ($response['data'] as $key => $value) {
-                $items[] = [
-                    'label' => $value,
-                    'value' => $key
-                ];
+
+            if(!empty($response['data']['omniva'])) {
+                $this->parcels = $response['data']['omniva'];
+                return $this->parcels;
             }
         }
 
         return $items;
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function getDataForDropdown()
+    {
+        if(empty($this->parcels)) {
+            $this->parcels = $this->executeRequest();
+        }
+        $parcelsArray = [];
+        if (!empty($this->parcels)) {
+            foreach ($this->parcels as $item) {
+                $parcelsArray[] = [
+                    'label' => $item['name'],
+                    'value' => $item['id']
+                ];
+            }
+        }
+        return $parcelsArray;
+    }
+
+    /**
+     * @param $parcelName
+     * @return mixed|void
+     * @throws Exception
+     */
+    public function getParcelDataByName($parcelName)
+    {
+        if(empty($this->parcels)) {
+            $this->parcels = $this->executeRequest();
+        }
+        foreach ($this->parcels as $item) {
+            if($item['name'] == $parcelName){
+                return $item;
+            }
+        }
     }
 
     /**
@@ -65,7 +104,7 @@ class AutocompleteAddress extends AbstractRequest
      */
     protected function getEndpointUri(array $params): string
     {
-        return $this->configurationProvider->getAutocompleteUrl();
+        return $this->configurationProvider->getParcelMachinesUrl();
     }
 
     /**

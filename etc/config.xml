@@ -5,7 +5,7 @@
         <qwqer>
             <active>1</active>
             <title>QWQER Express</title>
-            <name>Vakara piegāde (šodien)</name>
+            <name>(3h laikā)</name>
             <category>Other</category>
             <api_bearer_token>VWn17MYTcMA4SOsoHh5FKdDDa6S4ZFKYaqQZBeq1</api_bearer_token>
             <auth_endpoint>https://qwqer.hostcream.eu/api</auth_endpoint>
@@ -17,6 +17,25 @@
             <sort_order>15</sort_order>
             <model>Qwqer\Express\Model\Carrier\Express</model>
         </qwqer>
+        <qwqer_door>
+            <active>1</active>
+            <title>QWQER piegāde</title>
+            <name>(ŠODIEN 18:00 - 22:00)</name>
+            <shipping_cost>3</shipping_cost>
+            <sallowspecific>0</sallowspecific>
+            <sort_order>16</sort_order>
+            <model>Qwqer\Express\Model\Carrier\ScheduledToDoor</model>
+        </qwqer_door>
+        <qwqer_parcel>
+            <active>1</active>
+            <title>QWQER piegāde uz Omniva pakomātu</title>
+            <name>(ŠODIEN 18:00 - 22:00)</name>
+            <parcel_size>L</parcel_size>
+            <shipping_cost>3</shipping_cost>
+            <sallowspecific>0</sallowspecific>
+            <sort_order>17</sort_order>
+            <model>Qwqer\Express\Model\Carrier\ScheduledToParcel</model>
+        </qwqer_parcel>
     </carriers>
 </default>
 </config>

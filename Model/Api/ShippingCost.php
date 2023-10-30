@@ -54,11 +54,20 @@ class ShippingCost extends AbstractRequest
 
         $bodyArray =  [
             'type' => ConfigurationProvider::DELIVERY_ORDER_TYPES,
-            'real_type' => ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE,
             'category' => $this->configurationProvider->getCategory(),
             'origin' => $storeOwnerAddress,
             'destinations' => [$params],
         ];
+
+        if (!empty($params['real_type'])) {
+            $bodyArray['real_type'] = $params['real_type'];
+            if ($params['real_type'] == ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE_PARCEL
+                && $this->configurationProvider->getParcelSize())
+            {
+                $bodyArray['parcel_size'] = $this->configurationProvider->getParcelSize();
+            }
+            unset($params['real_type']);
+        }
 
         return array_merge(
             [

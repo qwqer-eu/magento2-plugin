@@ -25,7 +25,11 @@ define([
                 shippingMethodTitle += ' - ' + shippingMethod['method_title'];
             }
 
-            if (typeof shippingMethod.carrier_code !== 'undefined' && shippingMethod.carrier_code == 'qwqer') {
+            if (typeof shippingMethod.carrier_code !== 'undefined'
+                && (shippingMethod.carrier_code == 'qwqer'
+                    || shippingMethod.carrier_code == 'qwqer_door'
+                    || shippingMethod.carrier_code == 'qwqer_parcel')
+            ) {
                 let shippingAddress = quote.shippingAddress();
                 let extensionAttributesCheckoutConfig = window.checkoutConfig.extension_attributes;
                 if (shippingAddress.extension_attributes != undefined

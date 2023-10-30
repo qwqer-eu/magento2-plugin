@@ -41,7 +41,7 @@ class Autocomplete extends Action
         Context $context,
         AutocompleteAddress $autocompleteAddress,
         JsonFactory $resultJsonFactory,
-        GeoCode $geoCode,
+        GeoCode $geoCode
     ) {
         parent::__construct($context);
         $this->autocompleteAddress = $autocompleteAddress;

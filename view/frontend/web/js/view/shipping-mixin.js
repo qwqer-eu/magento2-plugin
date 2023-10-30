@@ -130,18 +130,28 @@ define([
 
             // added qwqer validation
             if(window.checkoutConfig.qwqer && quote.shippingMethod()
-                && quote.shippingMethod()['carrier_code'] == window.checkoutConfig.qwqer.methodCode
+                && (
+                    quote.shippingMethod()['carrier_code'] == window.checkoutConfig.qwqer.methodCode
+                    || quote.shippingMethod()['carrier_code'] == window.checkoutConfig.qwqer_door.methodCode
+                    || quote.shippingMethod()['carrier_code'] == window.checkoutConfig.qwqer_parcel.methodCode
+                )
             ) {
                 let shippingAddress = quote.shippingAddress();
                 if (
                     !shippingAddress.extension_attributes
                     || !shippingAddress.extension_attributes.qwqer_address
-                    || $("#carrier_address").val() == ''
                 ) {
-                    this.errorValidationMessage(
-                        $t('QWQER Express address field is required.')
-                    );
-                    return false;
+                    if (quote.shippingMethod()['carrier_code'] == window.checkoutConfig.qwqer_parcel.methodCode && $("#carrier_address_parcel").val() == '') {
+                        this.errorValidationMessage(
+                            $t('QWQER Parcel Machines field is required.')
+                        );
+                        return false;
+                    } else if ($("#carrier_address").val() == '') {
+                        this.errorValidationMessage(
+                            $t('QWQER address field is required.')
+                        );
+                        return false;
+                    }
                 }
             }
             // end qwqer validation
