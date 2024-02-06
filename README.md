@@ -45,4 +45,4 @@ Your extension is now installed and accessible from the left navigation menu in 
 * Default Parcel Size
 * Default Shipping Cost - Default shipping cost
 
-© QWQER | [https://qwqer.lv/](https://qwqer.lv/)
+QWQER | [https://qwqer.lv/](https://qwqer.lv/)
