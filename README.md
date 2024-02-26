@@ -10,8 +10,8 @@
     Download the QWQER Express extension
     Unzip the file
     In your Magento 2 root directory, create the folder app/code/Qwqer/Express
-    Move the extension’s unzipped files and folders to the new folder in your root directory
-    In the command line (using “cd”) navigate to your Magento 2 root directory
+    Move the extensions unzipped files and folders to the new folder in your root directory
+    In the command line (using cd) navigate to your Magento 2 root directory
     Run the following commands in order:
 
 ```sh
@@ -49,4 +49,4 @@ QWQER Order id saved in dtabase table "sales_order"
 * Default Parcel Size
 * Default Shipping Cost - Default shipping cost
 
-© QWQER | [https://qwqer.lv/](https://qwqer.lv/)
+QWQER | [https://qwqer.lv/](https://qwqer.lv/)
