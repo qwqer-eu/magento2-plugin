@@ -6,7 +6,8 @@
     },
     "sales_order": {
         "column": {
-            "qwqer_data": true
+            "qwqer_data": true,
+            "qwqer_order_id": true
         }
     }
 }

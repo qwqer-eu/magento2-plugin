@@ -58,6 +58,7 @@ class OrderPlaceBefore implements ObserverInterface
                 $order->setQwqerData(json_encode($placedOrder));
                 if (!empty($placedOrder['data']['id'])) {
                     $order->addStatusHistoryComment('QWQER Order Id: ' . $placedOrder['data']['id']);
+                    $order->setQwqerOrderId($placedOrder['data']['id']);
                 }
             }
         }

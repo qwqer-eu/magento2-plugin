@@ -26,4 +26,8 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Backend\Block\Widget\Button\Toolbar">
+        <plugin name="Qwqer_Express::pluginBeforePrintButton"
+                type="Qwqer\Express\Plugin\PrintButton" />
+    </type>
 </config>

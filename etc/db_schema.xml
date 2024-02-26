@@ -6,5 +6,7 @@
     <table name="sales_order" resource="sales" engine="innodb" comment="Salel Order">
         <column xsi:type="text" name="qwqer_data" nullable="true"
                 comment="QWQER Order Data"/>
+        <column xsi:type="text" name="qwqer_order_id" nullable="true"
+                comment="QWQER Order Id"/>
     </table>
 </schema>
