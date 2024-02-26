@@ -22,7 +22,7 @@ php bin/magento setup:di:compile
 
 Your extension is now installed and accessible from the left navigation menu in your Magento 2 back office: Stores > Configuration > Sales > Delivery Methods > QWQER Express.
 
-After successfully placed order, you can print shipping label in admin panel during view order information. Click button Print Label in Toolbal.
+After successfully placed order, you can print shipping label in admin panel during view order information. Click button Print Label in Toolbar.
 
 QWQER Order id saved in dtabase table "sales_order"
 
