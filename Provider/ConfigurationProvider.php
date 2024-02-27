@@ -169,6 +169,18 @@ class ConfigurationProvider
     }
 
     /**
+     * @param $path
+     * @return string
+     */
+    public function getStoreConfig($path): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            $path,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
      * Get Store Address Location
      *
      * @return array

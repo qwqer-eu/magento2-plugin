@@ -103,7 +103,6 @@ class PublishOrder
 
         $coordinates = $this->geoCode->executeRequest($originData);
         if ($order->getShippingMethod() == ScheduledToParcel::METHOD_CODE) {
-            $originData['parcel_size'] = $this->configurationProvider->getParcelSize();
             $response = $this->parcelMachines->getParcelDataByName($quote->getShippingAddress()->getQwqerAddress());
             if (!empty($response['coordinates'])) {
                 $coordinates['coordinates'] = $response['coordinates'];
@@ -113,6 +112,10 @@ class PublishOrder
         }
 
         $orderDataRequest = array_merge($originData, $coordinates);
+        if($order->getShippingMethod() == ScheduledToParcel::METHOD_CODE) {
+            $orderDataRequest['country'] = 'LV';
+            $orderDataRequest['city'] = 'Rīga';
+        }
         $orderDataRequest['real_type'] = $realType;
 
         return $this->orderPlace->executeRequest($orderDataRequest);

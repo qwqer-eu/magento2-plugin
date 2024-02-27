@@ -56,7 +56,20 @@ class OrderPlace extends AbstractRequest
         $storeOwnerAddress["address"] = $this->configurationProvider->getStoreAddress();
         $storeOwnerAddress["coordinates"] = $this->configurationProvider->getStoreAddressLocation();
 
-        $bodyArray =  [
+        $storeName = $this->configurationProvider->getStoreConfig('general/store_information/name');
+        if(!empty($storeName)) {
+            $storeOwnerAddress['name'] = $storeName;
+        }
+        $storeEmail = $this->configurationProvider->getStoreConfig('trans_email/ident_general/email');
+        if(!empty($storeEmail)) {
+            $storeOwnerAddress['email'] = $storeEmail;
+        }
+        $storePhone = $this->configurationProvider->getStoreConfig('general/store_information/phone');
+        if(!empty($storePhone)) {
+            $storeOwnerAddress['phone'] = $storePhone;
+        }
+
+        $bodyArray = [
             'type' => ConfigurationProvider::DELIVERY_ORDER_TYPES,
             'real_type' => $realType,
             'category' => $this->configurationProvider->getCategory(),
