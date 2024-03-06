@@ -109,6 +109,11 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
             return false;
         }
 
+        $available = $this->checkAvailableProduct();
+        if(!$available) {
+            return false;
+        }
+
         /** @var Method $method */
         $method = $this->rateMethodFactory->create();
 
@@ -128,6 +133,25 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
         $result->append($method);
 
         return $result;
+    }
+
+    /**
+     * @return false|void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function checkAvailableProduct()
+    {
+        $items = $this->_checkoutSession->getQuote()->getItems();
+        foreach ($items as $item) {
+            $isAvailable = intval($item->getProduct()->getData(ConfigurationProvider::ATTRIBUTE_CODE_AVAILABILITY));
+            if($isAvailable) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

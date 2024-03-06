@@ -3,7 +3,7 @@
 
 ##### For Magento / Adobe Commerce 2.4.x
 
-### How to Install Magento SMTP Extension
+### How to QWQER Express Delivery Extension
 
 ##### Install the extension using a zipped file
 
@@ -26,12 +26,15 @@ After successfully placed order, you can print shipping label in admin panel dur
 
 QWQER Order id saved in database table "sales_order"
 
+### Main Configurations
+
 Need setup store owner information:
 * Stores -> General -> Store Email Addresses -> General Contact -> Sender Email
 * Stores -> General -> Store Information -> Store Name
 * Stores -> General -> Store Information -> Store Phone Number
 
-### Main Configurations
+QWQER delivery is available for products only:
+- "Available Qwqer Delivery" product attribute value is "Yes"
 
 #### QWQER Express
 

@@ -35,6 +35,7 @@ class ConfigurationProvider
     public const DELIVERY_ORDER_REAL_TYPE = "ExpressDelivery";
     public const DELIVERY_ORDER_REAL_TYPE_DOOR = "ScheduledDelivery";
     public const DELIVERY_ORDER_REAL_TYPE_PARCEL = "OmnivaParcelTerminal";
+    public const ATTRIBUTE_CODE_AVAILABILITY = 'is_qwqer_available';
 
     /**
      * @var ScopeConfigInterface
