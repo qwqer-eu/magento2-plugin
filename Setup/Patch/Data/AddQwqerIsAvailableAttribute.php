@@ -57,7 +57,7 @@ class AddQwqerIsAvailableAttribute implements DataPatchInterface, PatchRevertabl
                 ConfigurationProvider::ATTRIBUTE_CODE_AVAILABILITY,
                 [
                     'type' => 'int',
-                    'label' => 'Available Qwqer Delivery',
+                    'label' => 'Available QWQER Delivery',
                     'input' => 'boolean',
                     'source' => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
                     'global' => Attribute::SCOPE_WEBSITE,
