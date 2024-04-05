@@ -3,7 +3,6 @@
 namespace Qwqer\Express\Model\Api;
 
 use Exception;
-use Qwqer\Express\Model\Api\AbstractRequest;
 
 class AutocompleteAddress extends AbstractRequest
 {

@@ -5,7 +5,6 @@ namespace Qwqer\Express\Model\Api;
 use Qwqer\Express\Logger\Logger;
 use Qwqer\Express\Service\ExecuteRequest;
 use Qwqer\Express\Provider\ConfigurationProvider;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\RequestInterface;
 
 abstract class AbstractRequest

@@ -4,10 +4,10 @@ namespace Qwqer\Express\Model\Api;
 
 use Exception;
 
-class GeoCode extends AbstractRequest
+class TradingPoint extends AbstractRequest
 {
     /**
-     * GeoCode getResponse
+     * TradingPoint getResponse
      *
      * @param array $params
      * @return array
@@ -19,7 +19,7 @@ class GeoCode extends AbstractRequest
             return $this->executeRequest->execute(
                 $this->getEndpointUri($params),
                 $this->getBodyParams($params),
-                "POST"
+                "GET"
             );
         } catch (\Exception $e) {
             $this->logger->critical($e->getMessage(), $e->getTrace());
@@ -37,11 +37,10 @@ class GeoCode extends AbstractRequest
     public function executeRequest(array $params = []): array
     {
         $response = parent::executeRequest($params);
-        $items = [];
-        if (!empty($response) && !empty($response['data']['coordinates'])) {
-            $items['coordinates'] = $response['data']['coordinates'];
+        if (!empty($response['data']['working_hours'])) {
+            $response = $response['data']['working_hours'];
         }
-        return $items;
+        return $response;
     }
 
     /**
@@ -52,7 +51,7 @@ class GeoCode extends AbstractRequest
      */
     protected function getEndpointUri(array $params): string
     {
-        return $this->configurationProvider->getGeoCode();
+        return $this->configurationProvider->getTradingPointUrl();
     }
 
     /**
@@ -65,7 +64,7 @@ class GeoCode extends AbstractRequest
     {
         return array_merge(
             [
-                'body' => json_encode($params)
+                'include' => 'working_hours,merchant'
             ],
             $this->additionalBodyParams
         );

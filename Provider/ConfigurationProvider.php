@@ -14,11 +14,13 @@ class ConfigurationProvider
 
     public const API_BEARER_TOKEN = 'carriers/qwqer/api_bearer_token';
     public const API_BASE_URL_PATH = 'carriers/qwqer/auth_endpoint';
-    public const API_TRANDING_POINT_ID = 'carriers/qwqer/trading_point_id';
+    public const API_TRADING_POINT_ID = 'carriers/qwqer/trading_point_id';
     public const API_STORE_ADDRESS = 'carriers/qwqer/store_address';
     public const API_STORE_ADDRESS_LOCATION = 'carriers/qwqer/geo_store';
     public const API_CATEGORY = 'carriers/qwqer/category';
     public const API_PARCEL_SIZE = 'carriers/qwqer_parcel/parcel_size';
+
+    public const API_WORKING_HOURS = 'carriers/qwqer/working_hours';
 
     public const API_AUTOCOMPLETE_URL = '/v1/plugins/magento/places/autocomplete';
     public const API_GEOCODE_URL = '/v1/plugins/magento/places/geocode';
@@ -36,6 +38,9 @@ class ConfigurationProvider
     public const DELIVERY_ORDER_REAL_TYPE_DOOR = "ScheduledDelivery";
     public const DELIVERY_ORDER_REAL_TYPE_PARCEL = "OmnivaParcelTerminal";
     public const ATTRIBUTE_CODE_AVAILABILITY = 'is_qwqer_available';
+
+    public const API_TRADING_POINT_INFO
+        = '/v1/plugins/magento/trading-points/{trading-point-id}';
 
     /**
      * @var ScopeConfigInterface
@@ -131,16 +136,26 @@ class ConfigurationProvider
     }
 
     /**
-     * Get API API_TRANDING_POINT_ID
+     * Get API API_TRADING_POINT_ID
      *
      * @return string
      */
-    public function getTrandingPointId(): string
+    public function getTradingPointId(): string
     {
         return (string) $this->scopeConfig->getValue(
-            self::API_TRANDING_POINT_ID,
+            self::API_TRADING_POINT_ID,
             ScopeInterface::SCOPE_STORE
         );
+    }
+
+    /**
+     * Get API API_TRADING_POINT_ID
+     *
+     * @return string
+     */
+    public function getTradingPointUrl(): string
+    {
+        return str_replace('{trading-point-id}', $this->getTradingPointId(), self::API_TRADING_POINT_INFO);
     }
 
     /**
@@ -236,7 +251,7 @@ class ConfigurationProvider
      */
     public function getShippingCost(array $params): string
     {
-        return str_replace('{trading-point-id}', $this->getTrandingPointId(), self::API_ORDER_PRICE_URL);
+        return str_replace('{trading-point-id}', $this->getTradingPointId(), self::API_ORDER_PRICE_URL);
     }
 
     /**
@@ -247,7 +262,7 @@ class ConfigurationProvider
      */
     public function getOrderPlaceUrl(array $params): string
     {
-        return str_replace('{trading-point-id}', $this->getTrandingPointId(), self::API_ORDER_CREATE_URL);
+        return str_replace('{trading-point-id}', $this->getTradingPointId(), self::API_ORDER_CREATE_URL);
     }
 
     /**
@@ -268,7 +283,7 @@ class ConfigurationProvider
      */
     public function getOrdersList(): string
     {
-        return str_replace('{trading-point-id}', $this->getTrandingPointId(), self::API_ORDER_LIST_URL);
+        return str_replace('{trading-point-id}', $this->getTradingPointId(), self::API_ORDER_LIST_URL);
     }
 
     /**

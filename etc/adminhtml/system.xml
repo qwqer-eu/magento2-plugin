@@ -33,6 +33,10 @@
                     <label>Trading point id</label>
                     <comment>Used for each QWQER methods</comment>
                 </field>
+                <field id="working_hours" translate="label" type="textarea" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Working Hours</label>
+                    <comment>Used for each QWQER methods</comment>
+                </field>
                 <field id="store_address" translate="label" type="text" sortOrder="37" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Store Address</label>
                     <frontend_model>Qwqer\Express\Model\Config\StoreAddress</frontend_model>

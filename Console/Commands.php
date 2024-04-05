@@ -1,4 +1,5 @@
 <?php
+
 namespace Qwqer\Express\Console;
 
 use Magento\Framework\App\State;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Command\Command;
 use Qwqer\Express\Model\Api\ParcelMachines;
 use Qwqer\Express\Model\Api\GetOrdersList;
 use Qwqer\Express\Model\Api\GetOrder;
+use Qwqer\Express\Model\Api\TradingPoint;
 use Qwqer\Express\Service\PublishOrder;
 
 class Commands extends Command
@@ -65,6 +67,7 @@ class Commands extends Command
         QuoteFactory $quoteFactory,
         GetOrdersList $getOrdersList,
         GetOrder $getOrder,
+        TradingPoint $tradingPoint,
         ?string $name = null
     ) {
         $this->state = $state;
@@ -74,6 +77,7 @@ class Commands extends Command
         $this->quoteFactory = $quoteFactory;
         $this->getOrdersList = $getOrdersList;
         $this->getOrder = $getOrder;
+        $this->tradingPoint = $tradingPoint;
         parent::__construct($name);
     }
 
@@ -108,7 +112,7 @@ class Commands extends Command
         $this->initState();
 
         $output->writeLn("Started");
-
+        //$result = $this->tradingPoint->executeRequest();
         /**$orderId = 7;
         $order = $this->orderRepository->get($orderId);
         $quote = $this->quoteFactory->create()->load($order->getQuoteId());
