@@ -27,7 +27,7 @@ abstract class AbstractRequest
     /**
      * @var ConfigurationProvider
      */
-    protected ConfigurationProvider $configurationProvider;
+    public ConfigurationProvider $configurationProvider;
 
     /**
      * @var RequestInterface

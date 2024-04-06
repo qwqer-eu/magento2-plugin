@@ -2,6 +2,7 @@
 
 namespace Qwqer\Express\Model\Carrier;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateResult\Method;
@@ -53,14 +54,19 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
     protected ShippingCost $shippingCost;
 
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
-    private $_checkoutSession;
+    private Session $_checkoutSession;
 
     /**
      * @var LoggerInterface
      */
     protected $_logger;
+
+    /**
+     * @var ConfigurationProvider
+     */
+    private ConfigurationProvider $configurationProvider;
 
     /**
      * Constructor Express
@@ -72,7 +78,8 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
      * @param MethodFactory $rateMethodFactory
      * @param GeoCode $geoCode
      * @param ShippingCost $shippingCost
-     * @param \Magento\Checkout\Model\Session $_checkoutSession
+     * @param Session $_checkoutSession
+     * @param ConfigurationProvider $configurationProvider
      * @param array $data
      */
     public function __construct(
@@ -83,7 +90,8 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
         MethodFactory $rateMethodFactory,
         GeoCode $geoCode,
         ShippingCost $shippingCost,
-        \Magento\Checkout\Model\Session $_checkoutSession,
+        Session $_checkoutSession,
+        ConfigurationProvider $configurationProvider,
         array $data = []
     ) {
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
@@ -92,6 +100,7 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
         $this->geoCode = $geoCode;
         $this->shippingCost = $shippingCost;
         $this->_checkoutSession = $_checkoutSession;
+        $this->configurationProvider = $configurationProvider;
         $this->_logger = $logger;
     }
 
@@ -110,7 +119,12 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
         }
 
         $available = $this->checkAvailableProduct();
-        if(!$available) {
+        if (!$available) {
+            return false;
+        }
+
+        $available = $this->configurationProvider->checkWorkingHours();
+        if (!$available) {
             return false;
         }
 

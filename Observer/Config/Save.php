@@ -91,13 +91,11 @@ class Save implements ObserverInterface
             $tradingPointId = $fields['trading_point_id'];
             if ($tradingPointId) {
                 $workingHours = $this->_apiRequestHelper->executeRequest();
-                if (is_array($workingHours)) {
-                    $this->_resourceConfig->saveConfig(
-                        ConfigurationProvider::API_WORKING_HOURS,
-                        json_encode($workingHours),
-                        $scope
-                    );
-                }
+                $this->_resourceConfig->saveConfig(
+                    ConfigurationProvider::API_WORKING_HOURS,
+                    json_encode($workingHours),
+                    $scope
+                );
             }
         }
         return $this;

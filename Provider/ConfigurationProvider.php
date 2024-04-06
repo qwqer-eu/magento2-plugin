@@ -3,7 +3,9 @@
 namespace Qwqer\Express\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\Stdlib\DateTime\DateTime as FrameworkDateTime;
 
 class ConfigurationProvider
 {
@@ -48,12 +50,28 @@ class ConfigurationProvider
     protected ScopeConfigInterface $scopeConfig;
 
     /**
+     * @var FrameworkDateTime
+     */
+    private FrameworkDateTime $dateTime;
+
+    /**
+     * @var Json
+     */
+    protected $_json;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
+     * @param FrameworkDateTime $dateTime
+     * @param Json $json
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        FrameworkDateTime $dateTime,
+        Json $json
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->dateTime = $dateTime;
+        $this->_json = $json;
     }
 
     /**
@@ -284,6 +302,39 @@ class ConfigurationProvider
     public function getOrdersList(): string
     {
         return str_replace('{trading-point-id}', $this->getTradingPointId(), self::API_ORDER_LIST_URL);
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkWorkingHours(): bool
+    {
+        $workingHoursConfig = $this->getStoreConfig(self::API_WORKING_HOURS);
+        if(!$workingHoursConfig) {
+            return true;
+        }
+        $workingHoursArray = $this->_json->unserialize($workingHoursConfig);
+        if(!is_array($workingHoursArray) || empty($workingHoursArray)) {
+            return true;
+        }
+        $days = ['Sunday','Monday', 'Tuesday', 'Wednesday','Thursday','Friday','Saturday'];
+        $today = $this->dateTime->date('N') * 1;
+        $dayOfWeek = $days[$today];
+        $isOpen = false;
+        foreach ($workingHoursArray as $workingHour) {
+            if($workingHour['day_of_week'] == $dayOfWeek) {
+                $dateTime = new \DateTime();
+                $startTimeObj = $dateTime::createFromFormat('H:i', $workingHour['time_from']);
+                $endTimeObj = $dateTime->createFromFormat('H:i', $workingHour['time_to']);
+                $currentTime = $this->dateTime->gmtDate('H:i');
+                $currentTimeObj = $dateTime->createFromFormat('H:i', $currentTime);
+                if ($currentTimeObj >= $startTimeObj && $currentTimeObj <= $endTimeObj) {
+                    $isOpen = true;
+                    break;
+                }
+            }
+        }
+        return $isOpen;
     }
 
     /**

@@ -16,6 +16,7 @@ use Qwqer\Express\Model\Api\GetOrdersList;
 use Qwqer\Express\Model\Api\GetOrder;
 use Qwqer\Express\Model\Api\TradingPoint;
 use Qwqer\Express\Service\PublishOrder;
+use Qwqer\Express\Provider\ConfigurationProvider;
 
 class Commands extends Command
 {
@@ -50,6 +51,21 @@ class Commands extends Command
     private GetOrder $getOrder;
 
     /**
+     * @var TradingPoint
+     */
+    private TradingPoint $tradingPoint;
+
+    /**
+     * @var PublishOrder
+     */
+    private PublishOrder $publishOrder;
+
+    /**
+     * @var ConfigurationProvider
+     */
+    private ConfigurationProvider $configurationProvider;
+
+    /**
      * @param State $state
      * @param ParcelMachines $parcelMachines
      * @param PublishOrder $publishOrder
@@ -57,6 +73,8 @@ class Commands extends Command
      * @param QuoteFactory $quoteFactory
      * @param GetOrdersList $getOrdersList
      * @param GetOrder $getOrder
+     * @param TradingPoint $tradingPoint
+     * @param ConfigurationProvider $configurationProvider
      * @param string|null $name
      */
     public function __construct(
@@ -68,6 +86,7 @@ class Commands extends Command
         GetOrdersList $getOrdersList,
         GetOrder $getOrder,
         TradingPoint $tradingPoint,
+        ConfigurationProvider $configurationProvider,
         ?string $name = null
     ) {
         $this->state = $state;
@@ -78,6 +97,7 @@ class Commands extends Command
         $this->getOrdersList = $getOrdersList;
         $this->getOrder = $getOrder;
         $this->tradingPoint = $tradingPoint;
+        $this->configurationProvider = $configurationProvider;
         parent::__construct($name);
     }
 
@@ -112,6 +132,7 @@ class Commands extends Command
         $this->initState();
 
         $output->writeLn("Started");
+        $this->configurationProvider->checkWorkingHours();
         //$result = $this->tradingPoint->executeRequest();
         /**$orderId = 7;
         $order = $this->orderRepository->get($orderId);
