@@ -9,6 +9,11 @@ use Magento\Framework\View\Element\AbstractBlock;
 class PrintButton
 {
     /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    private \Magento\Framework\App\RequestInterface $_request;
+
+    /**
      * @param Interceptor $subject
      * @param AbstractBlock $context
      * @param ButtonList $buttonList
