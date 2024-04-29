@@ -123,11 +123,6 @@ class ScheduledToDoor extends AbstractCarrier implements CarrierInterface
             return false;
         }
 
-        $available = $this->configurationProvider->checkWorkingHours();
-        if (!$available) {
-            return false;
-        }
-
         /** @var Method $method */
         $method = $this->rateMethodFactory->create();
 
