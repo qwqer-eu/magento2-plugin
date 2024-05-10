@@ -109,7 +109,7 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
         $message = '';
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
         $price = $this->configurationProvider->getStoreConfig(
-            "carriers/".$this->configurationProvider->getShippingMethodCode($shippingMethod)."/base_shipping_cost"
+            "carriers/".$this->configurationProvider->getShippingMethodCode($shippingMethod)."/shipping_cost"
         );
 
         if (isset($params['address']['data'])) {
