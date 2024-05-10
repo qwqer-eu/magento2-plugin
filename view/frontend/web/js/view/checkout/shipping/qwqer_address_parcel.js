@@ -118,11 +118,11 @@ define([
                             rateRegistry.set(shippingAddress.getKey(), null);
                             rateRegistry.set(shippingAddress.getCacheKey(), null);
                             quote.shippingAddress(shippingAddress);
-                            if(response.length && response[0] == 0) {
+                            if(response.length && response[0].success == false) {
                                 self.selectedParcel('');
                                 $(self.parcelInput).val('');
                                 newValue = '';
-                                self.errorMessageParcel($.mage.__("QWQER Parcel Machines Delivery option not available"));
+                                self.errorMessageParcel($.mage.__("QWQER Parcel Machines Delivery option is not available"));
                             }
                         }
                     });

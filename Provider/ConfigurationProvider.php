@@ -6,6 +6,9 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime as FrameworkDateTime;
+use Qwqer\Express\Model\Carrier\ScheduledToParcel;
+use Qwqer\Express\Model\Carrier\ScheduledToDoor;
+use Qwqer\Express\Model\Carrier\Express;
 
 class ConfigurationProvider
 {
@@ -215,6 +218,18 @@ class ConfigurationProvider
     }
 
     /**
+     * @param $path
+     * @return bool
+     */
+    public function getStoreConfigFlag($path): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            $path,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
      * Get Store Address Location
      *
      * @return array
@@ -335,6 +350,22 @@ class ConfigurationProvider
             }
         }
         return $isOpen;
+    }
+
+    /**
+     * @param $shippingMethod
+     * @return string
+     */
+    public function getShippingMethodCode($shippingMethod) :string
+    {
+        if ($shippingMethod == ScheduledToParcel::METHOD_CODE) {
+            return ScheduledToParcel::CARRIER_CODE;
+        } elseif ($shippingMethod == ScheduledToDoor::METHOD_CODE) {
+            return ScheduledToDoor::CARRIER_CODE;
+        } elseif ($shippingMethod == Express::METHOD_CODE) {
+            return Express::CARRIER_CODE;
+        }
+        return '';
     }
 
     /**

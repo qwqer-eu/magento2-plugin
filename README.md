@@ -43,6 +43,7 @@ QWQER delivery is available for products only:
 * Store Address - Base Store Address
 * Store Geo Locations - uploaded automatically after setup Store Address
 * Default Shipping Cost - Default shipping cost
+* Sync order to QWQER automatically - sync manually or automatically after place order  
 
 #### QWQER Scheduled to parcel locker
 

@@ -50,6 +50,17 @@
                     <label>Default Shipping Cost</label>
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
+                <field id="calculate_shipping_price" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Calculate shipping cost on QWQER side</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="base_shipping_cost" translate="label" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Shipping Cost For Customers</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="calculate_shipping_price">0</field>
+                    </depends>
+                </field>
                 <field id="sallowspecific" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Ship to Applicable Countries</label>
                     <frontend_class>shipping-applicable-country</frontend_class>
@@ -67,6 +78,10 @@
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Sort Order</label>
+                </field>
+                <field id="sync_automatically" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Sync order to QWQER automatically</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="qwqer_door" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -85,6 +100,17 @@
                     <label>Default Shipping Cost</label>
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
+                <field id="calculate_shipping_price" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Calculate shipping cost on QWQER side</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="base_shipping_cost" translate="label" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Shipping Cost For Customers</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="calculate_shipping_price">0</field>
+                    </depends>
+                </field>
                 <field id="sallowspecific" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Ship to Applicable Countries</label>
                     <frontend_class>shipping-applicable-country</frontend_class>
@@ -102,6 +128,10 @@
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Sort Order</label>
+                </field>
+                <field id="sync_automatically" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Sync order to QWQER automatically</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="qwqer_parcel" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -123,6 +153,17 @@
                     <label>Default Shipping Cost</label>
                     <validate>validate-number validate-zero-or-greater</validate>
                 </field>
+                <field id="calculate_shipping_price" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Calculate shipping cost on QWQER side</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="base_shipping_cost" translate="label" type="text" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Shipping Cost For Customers</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="calculate_shipping_price">0</field>
+                    </depends>
+                </field>
                 <field id="sallowspecific" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Ship to Applicable Countries</label>
                     <frontend_class>shipping-applicable-country</frontend_class>
@@ -140,6 +181,10 @@
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Sort Order</label>
+                </field>
+                <field id="sync_automatically" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Sync order to QWQER automatically</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
         </section>

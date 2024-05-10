@@ -174,7 +174,9 @@ class ScheduledToDoor extends AbstractCarrier implements CarrierInterface
     {
         $address = $this->_checkoutSession->getQuote()->getShippingAddress()->getData('qwqer_address');
         $price = $this->getConfigData('shipping_cost');
-        if ($address) {
+        $calculatePrice = $this->getConfigData('calculate_shipping_price');
+
+        if ($address && $calculatePrice) {
             $params = ['address' => $address];
             try {
                 $coordinates = $this->geoCode->executeRequest($params);
@@ -189,6 +191,8 @@ class ScheduledToDoor extends AbstractCarrier implements CarrierInterface
             } catch (\Exception $exception) {
                 $this->_logger->error($exception->getMessage());
             }
+        } elseif (!$calculatePrice) {
+            $price = $this->getConfigData('base_shipping_cost');
         }
         return (float) $price;
     }

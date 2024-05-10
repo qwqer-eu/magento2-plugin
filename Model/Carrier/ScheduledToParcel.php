@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Qwqer\Express\Model\Api\GeoCode;
 use Qwqer\Express\Model\Api\ShippingCost;
 use Qwqer\Express\Provider\ConfigurationProvider;
+use Qwqer\Express\Model\Api\ParcelMachines;
 
 class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
 {
@@ -69,6 +70,11 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
     private ConfigurationProvider $configurationProvider;
 
     /**
+     * @var ParcelMachines
+     */
+    private ParcelMachines $parcelMachines;
+
+    /**
      * Constructor Express
      *
      * @param ScopeConfigInterface $scopeConfig
@@ -92,6 +98,7 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
         ShippingCost $shippingCost,
         Session $_checkoutSession,
         ConfigurationProvider $configurationProvider,
+        ParcelMachines $parcelMachines,
         array $data = []
     ) {
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
@@ -101,6 +108,7 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
         $this->shippingCost = $shippingCost;
         $this->_checkoutSession = $_checkoutSession;
         $this->configurationProvider = $configurationProvider;
+        $this->parcelMachines = $parcelMachines;
         $this->_logger = $logger;
     }
 
@@ -174,15 +182,19 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
     {
         $address = $this->_checkoutSession->getQuote()->getShippingAddress()->getData('qwqer_address');
         $price = $this->getConfigData('shipping_cost');
-        if ($address) {
+        $calculatePrice = $this->getConfigData('calculate_shipping_price');
+
+        if ($address && $calculatePrice) {
             $params = ['address' => $address];
             try {
-                $coordinates = $this->geoCode->executeRequest($params);
-                if (!empty($coordinates)) {
+                $response = $this->parcelMachines->getParcelDataByName($address);
+                if (!empty($response['coordinates'])) {
+                    $coordinates['coordinates'] = $response['coordinates'];
                     $orderDataRequest = array_merge($params, $coordinates);
                     $orderDataRequest['real_type'] = ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE_PARCEL;
                     $orderDataRequest['parcel_size'] = $this->getConfigData('parcel_size');
                     $result = $this->shippingCost->executeRequest($orderDataRequest);
+
                     if (!empty($result['data']) && isset($result['data']['client_price'])) {
                         $price = $result['data']['client_price'] / 100;
                     }
@@ -190,6 +202,8 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
             } catch (\Exception $exception) {
                 $this->_logger->error($exception->getMessage());
             }
+        } elseif (!$calculatePrice) {
+            $price = $this->getConfigData('base_shipping_cost');
         }
         return (float) $price;
     }

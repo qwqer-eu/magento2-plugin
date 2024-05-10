@@ -16,6 +16,9 @@
             <sallowspecific>0</sallowspecific>
             <sort_order>15</sort_order>
             <model>Qwqer\Express\Model\Carrier\Express</model>
+            <sync_automatically>0</sync_automatically>
+            <calculate_shipping_price>1</calculate_shipping_price>
+            <base_shipping_cost>0</base_shipping_cost>
         </qwqer>
         <qwqer_door>
             <active>1</active>
@@ -25,6 +28,9 @@
             <sallowspecific>0</sallowspecific>
             <sort_order>16</sort_order>
             <model>Qwqer\Express\Model\Carrier\ScheduledToDoor</model>
+            <sync_automatically>0</sync_automatically>
+            <calculate_shipping_price>1</calculate_shipping_price>
+            <base_shipping_cost>0</base_shipping_cost>
         </qwqer_door>
         <qwqer_parcel>
             <active>1</active>
@@ -35,6 +41,9 @@
             <sallowspecific>0</sallowspecific>
             <sort_order>17</sort_order>
             <model>Qwqer\Express\Model\Carrier\ScheduledToParcel</model>
+            <sync_automatically>0</sync_automatically>
+            <calculate_shipping_price>1</calculate_shipping_price>
+            <base_shipping_cost>0</base_shipping_cost>
         </qwqer_parcel>
     </carriers>
 </default>

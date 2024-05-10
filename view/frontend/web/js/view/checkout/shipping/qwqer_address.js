@@ -126,11 +126,11 @@ define([
                             rateRegistry.set(shippingAddress.getKey(), null);
                             rateRegistry.set(shippingAddress.getCacheKey(), null);
                             quote.shippingAddress(shippingAddress);
-                            if(response.length && response[0] == 0) {
+                            if(response.length && response[0].success == false) {
                                 self.selectedQwqerAddress('');
                                 $(self.cityInput).val('');
                                 newValue = '';
-                                self.errorMessageAddress($.mage.__("QWQER Delivery option not available"));
+                                self.errorMessageAddress($.mage.__("QWQER Delivery option is not available"));
                             }
                         }
                     });

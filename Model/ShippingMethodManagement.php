@@ -3,6 +3,7 @@
 namespace Qwqer\Express\Model;
 
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartRepositoryInterface;
 use \Magento\Framework\Webapi\Rest\Request;
 use Magento\Quote\Model\Quote;
@@ -10,8 +11,10 @@ use Magento\Quote\Model\QuoteIdMask;
 use Magento\Quote\Model\QuoteIdMaskFactory;
 use Qwqer\Express\Model\Api\GeoCode;
 use Qwqer\Express\Model\Api\ShippingCost;
+use Qwqer\Express\Model\Carrier\ScheduledToDoor;
 use Qwqer\Express\Model\Carrier\ScheduledToParcel;
 use Qwqer\Express\Model\Api\ParcelMachines;
+use Qwqer\Express\Provider\ConfigurationProvider;
 
 /**
  * Save QWQER address to customer attributes in quote
@@ -60,6 +63,7 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
      * @param GeoCode $geoCode
      * @param ShippingCost $shippingCost
      * @param ParcelMachines $parcelMachines
+     * @param ConfigurationProvider $ConfigurationProvider
      */
     public function __construct(
         CartRepositoryInterface $quoteRepository,
@@ -67,7 +71,8 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
         QuoteIdMaskFactory $quoteIdMaskFactory,
         GeoCode $geoCode,
         ShippingCost $shippingCost,
-        ParcelMachines $parcelMachines
+        ParcelMachines $parcelMachines,
+        ConfigurationProvider $ConfigurationProvider
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->request = $request;
@@ -75,11 +80,13 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
         $this->geoCode = $geoCode;
         $this->shippingCost = $shippingCost;
         $this->parcelMachines = $parcelMachines;
+        $this->configurationProvider = $ConfigurationProvider;
     }
 
     /**
-     * @inheritdoc
-     * @throws \Exception
+     * @param string $cartId
+     * @return array|array[]
+     * @throws NoSuchEntityException
      */
     public function estimateByExtendedAddress(string $cartId)
     {
@@ -97,13 +104,20 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
         }
 
         $params = $this->request->getBodyParams();
-        $price = 0;
+
+        $success = true;
+        $message = '';
+        $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
+        $price = $this->configurationProvider->getStoreConfig(
+            "carriers/".$this->configurationProvider->getShippingMethodCode($shippingMethod)."/base_shipping_cost"
+        );
+
         if (isset($params['address']['data'])) {
             try {
                 $addressString = $params['address']['data'];
                 $params = ['address' => $addressString];
+
                 $coordinates = [];
-                $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
                 if ($shippingMethod == ScheduledToParcel::METHOD_CODE) {
                     $response = $this->parcelMachines->getParcelDataByName($addressString);
                     if (!empty($response['coordinates'])) {
@@ -112,19 +126,49 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
                 } else {
                     $coordinates = $this->geoCode->executeRequest($params);
                 }
-                // todo continue with parameters
+
                 if (!empty($coordinates)) {
                     $orderDataRequest = array_merge($params, $coordinates);
+
+                    if ($shippingMethod == ScheduledToParcel::METHOD_CODE) {
+                        $orderDataRequest['real_type'] = ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE_PARCEL;
+                        $orderDataRequest['parcel_size'] = $this->configurationProvider->getStoreConfig(
+                            "carriers/".$this->configurationProvider->getShippingMethodCode($shippingMethod)."/parcel_size"
+                        );
+                    } elseif ($shippingMethod == ScheduledToDoor::METHOD_CODE) {
+                        $orderDataRequest['real_type'] = ConfigurationProvider::DELIVERY_ORDER_REAL_TYPE_DOOR;
+                    }
                     $result = $this->shippingCost->executeRequest($orderDataRequest);
                     if (!empty($result['data']) && isset($result['data']['client_price'])) {
                         $price = $result['data']['client_price'] / 100;
                         $quote->getShippingAddress()->getExtensionAttributes()->setQwqerAddress($addressString);
+                    } else {
+                        $success = false;
+                        $message = __('Can not calculate shipping price');
                     }
                 }
+
+                $calculateShipping = $this->configurationProvider->getStoreConfigFlag(
+                    "carriers/".$this->configurationProvider->getShippingMethodCode($shippingMethod)."/calculate_shipping_price"
+                );
+                if (!$calculateShipping) {
+                    $price = $this->configurationProvider->getStoreConfig(
+                    "carriers/".$this->configurationProvider->getShippingMethodCode($shippingMethod)."/base_shipping_cost"
+                    );
+                }
+
             } catch (\Exception $e) {
-                //skip
+                $success = false;
+                $message = $e->getMessage();
             }
         }
-        return [$price];
+        $result = [
+            [
+                'price' => $price,
+                'success' => $success,
+                'message' => $message
+            ],
+        ];
+        return $result;
     }
 }

@@ -9,6 +9,7 @@ use Qwqer\Express\Model\Carrier\ScheduledToDoor;
 use Qwqer\Express\Model\Carrier\ScheduledToParcel;
 use Qwqer\Express\Service\PublishOrder;
 use Qwqer\Express\Logger\Logger;
+use Qwqer\Express\Provider\ConfigurationProvider;
 
 class OrderPlaceBefore implements ObserverInterface
 {
@@ -23,15 +24,23 @@ class OrderPlaceBefore implements ObserverInterface
     protected Logger $logger;
 
     /**
+     * @var ConfigurationProvider
+     */
+    protected ConfigurationProvider $ConfigurationProvider;
+
+    /**
      * @param PublishOrder $publishOrder
      * @param Logger $logger
+     * @param ConfigurationProvider $ConfigurationProvider
      */
     public function __construct(
         PublishOrder $publishOrder,
-        Logger $logger
+        Logger $logger,
+        ConfigurationProvider $ConfigurationProvider
     ) {
         $this->publishOrder = $publishOrder;
         $this->logger = $logger;
+        $this->configurationProvider = $ConfigurationProvider;
     }
 
     /**
@@ -53,12 +62,17 @@ class OrderPlaceBefore implements ObserverInterface
             )
             && $quote->getShippingAddress()->getQwqerAddress()
         ) {
-            $placedOrder = $this->publishOrder->execute($order, $quote);
-            if ($placedOrder) {
-                $order->setQwqerData(json_encode($placedOrder));
-                if (!empty($placedOrder['data']['id'])) {
-                    $order->addStatusHistoryComment('QWQER Order Id: ' . $placedOrder['data']['id']);
-                    $order->setQwqerOrderId($placedOrder['data']['id']);
+            $syncAutomatically = $this->configurationProvider->getStoreConfig(
+                "carriers/".$shippingMethod->getData('carrier_code')."/sync_automatically"
+            );
+            if ($syncAutomatically) {
+                $placedOrder = $this->publishOrder->execute($order, $quote);
+                if ($placedOrder) {
+                    $order->setQwqerData(json_encode($placedOrder));
+                    if (!empty($placedOrder['data']['id'])) {
+                        $order->addStatusHistoryComment('QWQER Order Id: ' . $placedOrder['data']['id']);
+                        $order->setQwqerOrderId($placedOrder['data']['id']);
+                    }
                 }
             }
         }
