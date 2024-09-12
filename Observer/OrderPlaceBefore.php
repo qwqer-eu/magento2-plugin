@@ -4,12 +4,13 @@ namespace Qwqer\Express\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Store\Model\ScopeInterface;
 use Qwqer\Express\Model\Carrier\Express;
 use Qwqer\Express\Model\Carrier\ScheduledToDoor;
 use Qwqer\Express\Model\Carrier\ScheduledToParcel;
 use Qwqer\Express\Service\PublishOrder;
 use Qwqer\Express\Logger\Logger;
-use Qwqer\Express\Provider\ConfigurationProvider;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class OrderPlaceBefore implements ObserverInterface
 {
@@ -24,23 +25,23 @@ class OrderPlaceBefore implements ObserverInterface
     protected Logger $logger;
 
     /**
-     * @var ConfigurationProvider
+     * @var ScopeConfigInterface
      */
-    protected ConfigurationProvider $ConfigurationProvider;
+    protected ScopeConfigInterface $scopeConfig;
 
     /**
      * @param PublishOrder $publishOrder
      * @param Logger $logger
-     * @param ConfigurationProvider $ConfigurationProvider
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         PublishOrder $publishOrder,
         Logger $logger,
-        ConfigurationProvider $ConfigurationProvider
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->publishOrder = $publishOrder;
         $this->logger = $logger;
-        $this->configurationProvider = $ConfigurationProvider;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -62,8 +63,9 @@ class OrderPlaceBefore implements ObserverInterface
             )
             && $quote->getShippingAddress()->getQwqerAddress()
         ) {
-            $syncAutomatically = $this->configurationProvider->getStoreConfig(
-                "carriers/".$shippingMethod->getData('carrier_code')."/sync_automatically"
+            $syncAutomatically = $this->scopeConfig->getValue(
+                "carriers/".$shippingMethod->getData('carrier_code')."/sync_automatically",
+                ScopeInterface::SCOPE_STORE
             );
             if ($syncAutomatically) {
                 $placedOrder = $this->publishOrder->execute($order, $quote);

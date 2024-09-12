@@ -34,12 +34,12 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
     /**
      * @var Request
      */
-    private Request $request;
+    protected Request $request;
 
     /**
      * @var QuoteIdMaskFactory
      */
-    private QuoteIdMaskFactory $quoteIdMaskFactory;
+    protected QuoteIdMaskFactory $quoteIdMaskFactory;
 
     /**
      * @var GeoCode
@@ -54,7 +54,12 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
     /**
      * @var ParcelMachines
      */
-    private ParcelMachines $parcelMachines;
+    protected ParcelMachines $parcelMachines;
+
+    /**
+     * @var ConfigurationProvider
+     */
+    protected ConfigurationProvider $configurationProvider;
 
     /**
      * @param CartRepositoryInterface $quoteRepository
@@ -63,7 +68,7 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
      * @param GeoCode $geoCode
      * @param ShippingCost $shippingCost
      * @param ParcelMachines $parcelMachines
-     * @param ConfigurationProvider $ConfigurationProvider
+     * @param ConfigurationProvider $configurationProvider
      */
     public function __construct(
         CartRepositoryInterface $quoteRepository,
@@ -72,7 +77,7 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
         GeoCode $geoCode,
         ShippingCost $shippingCost,
         ParcelMachines $parcelMachines,
-        ConfigurationProvider $ConfigurationProvider
+        ConfigurationProvider $configurationProvider
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->request = $request;
@@ -80,7 +85,7 @@ class ShippingMethodManagement implements \Qwqer\Express\Api\ShipmentEstimationI
         $this->geoCode = $geoCode;
         $this->shippingCost = $shippingCost;
         $this->parcelMachines = $parcelMachines;
-        $this->configurationProvider = $ConfigurationProvider;
+        $this->configurationProvider = $configurationProvider;
     }
 
     /**

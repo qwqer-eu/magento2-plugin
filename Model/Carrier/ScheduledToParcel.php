@@ -75,7 +75,7 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
     private ParcelMachines $parcelMachines;
 
     /**
-     * Constructor Express
+     * Constructor ScheduledToParcel
      *
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
@@ -86,6 +86,7 @@ class ScheduledToParcel extends AbstractCarrier implements CarrierInterface
      * @param ShippingCost $shippingCost
      * @param Session $_checkoutSession
      * @param ConfigurationProvider $configurationProvider
+     * @param ParcelMachines $parcelMachines
      * @param array $data
      */
     public function __construct(

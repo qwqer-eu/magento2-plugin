@@ -69,7 +69,7 @@ class ScheduledToDoor extends AbstractCarrier implements CarrierInterface
     private ConfigurationProvider $configurationProvider;
 
     /**
-     * Constructor Express
+     * Constructor ScheduledToDoor
      *
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
