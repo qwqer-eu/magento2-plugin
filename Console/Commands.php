@@ -38,7 +38,7 @@ class Commands extends Command
     /**
      * @var QuoteFactory
      */
-    protected $quoteFactory;
+    protected QuoteFactory $quoteFactory;
 
     /**
      * @var GetOrdersList

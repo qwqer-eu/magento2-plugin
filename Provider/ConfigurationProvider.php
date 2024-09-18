@@ -69,9 +69,10 @@ class ConfigurationProvider
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        FrameworkDateTime $dateTime,
-        Json $json
-    ) {
+        FrameworkDateTime    $dateTime,
+        Json                 $json
+    )
+    {
         $this->scopeConfig = $scopeConfig;
         $this->dateTime = $dateTime;
         $this->_json = $json;
@@ -124,7 +125,7 @@ class ConfigurationProvider
      */
     public function getParcelSize(): string
     {
-        return (string) $this->scopeConfig->getValue(
+        return (string)$this->scopeConfig->getValue(
             self::API_PARCEL_SIZE,
             ScopeInterface::SCOPE_STORE
         );
@@ -137,7 +138,7 @@ class ConfigurationProvider
      */
     public function getAPIBaseUrl(): string
     {
-        return (string) $this->scopeConfig->getValue(
+        return (string)$this->scopeConfig->getValue(
             self::API_BASE_URL_PATH,
             ScopeInterface::SCOPE_STORE
         );
@@ -150,7 +151,7 @@ class ConfigurationProvider
      */
     public function getApiBearerToken(): string
     {
-        return (string)  $this->scopeConfig->getValue(
+        return (string)$this->scopeConfig->getValue(
             self::API_BEARER_TOKEN,
             ScopeInterface::SCOPE_STORE
         );
@@ -163,7 +164,7 @@ class ConfigurationProvider
      */
     public function getTradingPointId(): string
     {
-        return (string) $this->scopeConfig->getValue(
+        return (string)$this->scopeConfig->getValue(
             self::API_TRADING_POINT_ID,
             ScopeInterface::SCOPE_STORE
         );
@@ -186,7 +187,7 @@ class ConfigurationProvider
      */
     public function getCategory(): string
     {
-        return (string) $this->scopeConfig->getValue(
+        return (string)$this->scopeConfig->getValue(
             self::API_CATEGORY,
             ScopeInterface::SCOPE_STORE
         );
@@ -199,7 +200,7 @@ class ConfigurationProvider
      */
     public function getStoreAddress(): string
     {
-        return (string) $this->scopeConfig->getValue(
+        return (string)$this->scopeConfig->getValue(
             self::API_STORE_ADDRESS,
             ScopeInterface::SCOPE_STORE
         );
@@ -211,7 +212,7 @@ class ConfigurationProvider
      */
     public function getStoreConfig($path): string
     {
-        return (string) $this->scopeConfig->getValue(
+        return (string)$this->scopeConfig->getValue(
             $path,
             ScopeInterface::SCOPE_STORE
         );
@@ -329,15 +330,19 @@ class ConfigurationProvider
             return true;
         }
         $workingHoursArray = $this->_json->unserialize($workingHoursConfig);
-        if(!is_array($workingHoursArray) || empty($workingHoursArray)) {
+        if (!is_array($workingHoursArray) || empty($workingHoursArray)) {
             return true;
         }
-        $days = ['Sunday','Monday', 'Tuesday', 'Wednesday','Thursday','Friday','Saturday'];
+        $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         $today = $this->dateTime->date('N') * 1;
         $dayOfWeek = $days[$today];
         $isOpen = false;
         foreach ($workingHoursArray as $workingHour) {
-            if($workingHour['day_of_week'] == $dayOfWeek) {
+            if (isset($workingHour['day_of_week'])
+                && $workingHour['day_of_week'] == $dayOfWeek
+                && isset($workingHour['time_from'])
+                && isset($workingHour['time_to'])
+            ) {
                 $dateTime = new \DateTime();
                 $startTimeObj = $dateTime::createFromFormat('H:i', $workingHour['time_from']);
                 $endTimeObj = $dateTime->createFromFormat('H:i', $workingHour['time_to']);
