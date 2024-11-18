@@ -8,7 +8,7 @@
             <name>(3h laikā)</name>
             <category>Other</category>
             <api_bearer_token>VWn17MYTcMA4SOsoHh5FKdDDa6S4ZFKYaqQZBeq1</api_bearer_token>
-            <auth_endpoint>https://qwqer.hostcream.eu/api</auth_endpoint>
+            <auth_endpoint>https://api.qwqer.lv</auth_endpoint>
             <trading_point_id>2</trading_point_id>
             <store_address>The Riga Central Library regional branch Plavnieki, Salnas iela, Latgale Suburb, Rīga, Latvia</store_address>
             <geo_store>56.9420606,24.2202912</geo_store>
